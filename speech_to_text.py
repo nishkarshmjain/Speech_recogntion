@@ -10,14 +10,14 @@ import os
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 import moviepy.editor as mp 
-
+import pandas as pd
 
 
 
 def video_to_audio(video_path) :
     clip = mp.VideoFileClip(video_path) 
-    clip.audio.write_audiofile(r"C:\Users\nish\Desktop\Projects\Spyder Projects\SPeechRecognition\audio2.wav") 
-    audio_path = r"C:\Users\nish\Desktop\Projects\Spyder Projects\SPeechRecognition\audio2.wav"
+    clip.audio.write_audiofile(r"C:\Users\nish\Desktop\Projects\Spyder Projects\SPeechRecognition\audio3.wav") 
+    audio_path = r"C:\Users\nish\Desktop\Projects\Spyder Projects\SPeechRecognition\audio3.wav"
     return audio_path
 
 
@@ -48,8 +48,10 @@ def video_audio_transcription(path):
     if not os.path.isdir(audio_chunks_path):
         os.mkdir(audio_chunks_path)
     whole_text = ""
+    csv_data = {}
     
     for i, audio_chunk in enumerate(chunks, start=1):
+        audio_chunks_path = r"C:\Users\nish\Desktop\Projects\Spyder Projects\SPeechRecognition\audio-chunks"
 
         chunk_filename = os.path.join(audio_chunks_path, f"chunk{i}.wav")
         audio_chunk.export(chunk_filename, format="wav")
@@ -63,11 +65,12 @@ def video_audio_transcription(path):
                 print("Error:", str(e))
             else:
                 text = f"{text.capitalize()}. "
-                print(chunk_filename, ":", text)
-                whole_text += text
+                
+                #csv_data = csv_data.update({chunk_filename : text})
+                whole_text = whole_text + '\n' + text
                 
                 
-    return whole_text
+    return whole_text#,csv_data
 
 
 #if __name__ == '__main__':
@@ -76,5 +79,6 @@ def video_audio_transcription(path):
     #video_path= r"C:\Users\nish\Desktop\Projects\Spyder Projects\SPeechRecognition\sample2.mkv"
     #audio_path = video_to_audio(video_path)
     
-print("\nFull text:", video_audio_transcription(r"C:\Users\nish\Desktop\Projects\Spyder Projects\SPeechRecognition\audio2.wav"))
-
+print("\nFull text:", video_audio_transcription(
+    r"C:\Users\nish\Desktop\Projects\Spyder Projects\SPeechRecognition\audio3.wav"))
+#df_output=pd.DataFrame(csv_data)
